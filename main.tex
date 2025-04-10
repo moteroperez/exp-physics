@@ -1,0 +1,833 @@
+\documentclass[12pt, letterpaper]{article} % 'openany' removes blank pages between chapters
+
+% Import necessary packages
+\usepackage{amsmath, amssymb, amsthm} % For math support
+\usepackage{geometry} % Page margins
+\usepackage{xcolor} % For custom colors
+\usepackage{lmodern} % Clean font
+\usepackage{microtype} % Better typography
+\usepackage{hyperref} % Clickable links (minimalistic style)
+\usepackage{fancyhdr} % For header and footer customization
+\usepackage{titlesec} % To customize section and chapter titles
+\usepackage[spanish]{babel} % For Spanish language support
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+
+% \usepackage[margin=1.5cm]{geometry}
+\usepackage[backend=bibtex,style=numeric,sorting=none]{biblatex}
+
+% Set geometry for clean page layout
+% \geometry{
+%   a4paper,
+%   left=1in,
+%   right=1in,
+%   top=1in,
+%   bottom=1in
+% }
+
+% Define main color (blue)
+\definecolor{maincolor}{HTML}{2A30DD}
+
+% Hyperref options for links (use the main color)
+\hypersetup{
+  colorlinks=true,
+  linkcolor=maincolor,
+  urlcolor=maincolor,
+  citecolor=maincolor
+}
+
+% Custom commands for simple formatting
+\newcommand{\highlight}[1]{\textcolor{maincolor}{#1}} % Custom highlight color
+
+% Minimalist section title style with bold and black color
+\usepackage{sectsty}
+\sectionfont{\color{black}\normalfont\Large\bfseries} % Section titles bold and in black
+\subsectionfont{\color{black}\normalfont\large\bfseries} % Subsection titles bold and in black
+
+% Math environment styling (amsmath is already included)
+\theoremstyle{plain} % Clean theorem styles
+\newtheorem{theorem}{Teorema}
+
+% Customize page style for centered page numbers
+\pagestyle{fancy}
+\fancyhf{} % Clear existing headers and footers
+\fancyfoot[C]{\thepage} % Center the page number at the bottom
+\renewcommand{\headrulewidth}{0pt} % Remove the header line
+
+% Remove "Chapter X" and format chapters as "1. Introducción" in black
+\titleformat{\chapter}[hang]
+  {\normalfont\huge\bfseries\color{black}} % Format of the chapter title in black
+  {\thechapter.} % Chapter number as "1.", "2.", etc.
+  {20pt} % Space between number and title
+  {\Huge} % Title size
+
+% Start page numbering on the first page
+\pagestyle{fancy}
+\fancypagestyle{plain}{
+  \fancyhf{} 
+  \fancyfoot[C]{\thepage} 
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% Manually format the date in Spanish
+%\renewcommand{\today}{\number\day~de~\ifcase\month\or Enero\or Febrero\or marzo\or abril\or mayo\or junio\or julio\or agosto\or septiembre\or octubre\or noviembre\or diciembre\fi~de~\number\year}
+
+% importar referencias
+\addbibresource{references.bib}
+
+
+\begin{document}
+% Start page numbers from title page (arabic numbers)
+\pagenumbering{arabic}
+
+\title{\Huge{Carga del Condensador}}
+\author{Martín Otero Pérez}
+\date{Marzo del 2025} % Date now in Spanish
+\maketitle
+
+% Rename "Contents" to "Contenido"
+\renewcommand{\contentsname}{Contenido}
+\newpage
+\tableofcontents % Optional
+\newpage
+
+\section*{Objetivos}
+
+En esta humilde memoria, estudiamos el comportamiento de un circuito RC muy básico, un condensador descargandose através de una resistencia, y su evolución en el tiempo. Para esto, mediremos la intensidad en función del tiempo para diferentes valores de $R$, $C$ y $V$, siendo estos el valor de la resistencia de descarga, la capacitancia y el voltaje de carga respectivamente.
+
+\section*{Material y Método}
+
+El material utilizado para esta práctica fue:
+
+\begin{enumerate}
+	\item 2 Multímetros \textbf{RS PRO RS-14}
+	\item Una fuente de alimentación Phywe con capacidad hasta $12.22V$
+	\item 4 condensadores de diferentes capacitancias : 
+	\item Resistencias varias
+	\item Un interruptor
+	\item Placas base para interconexiones eléctricas
+	\item 2 Teléfonos moviles, uno con capacidad de cronómetro y otro con capacidad de grabación en cámara lenta
+	\item Cables de conexión
+	\item skibidi toilet
+\end{enumerate}
+
+\section*{Análisis de Datos}
+
+La incertidumbre en la medición del tiempo se estimó considerando las siguientes fuentes:
+
+\begin{enumerate}
+    \item \textbf{Resolución del cronómetro:} el cronómetro utilizado medía hasta centésimas de segundo, lo que aporta una incertidumbre de:
+    \[
+        s_{\text{crono}}(t) = \pm 0.01\,\text{s}
+    \]
+    
+    \item \textbf{Resolución temporal del video en cámara lenta:} dado que los instantes de interés se identificaron manualmente, fotograma a fotograma, la incertidumbre se reduce a la resolución temporal del video. Para una grabación a \( f \) fps:
+    \[
+        s_{\text{fps}}(t) = \pm \frac{1}{f}
+    \]
+	Para los vídeos realizados a cámara lenta : $f = 120 \implies s_{\text{fps}}(t) = \pm 0.0083 s$
+    
+\item \textbf{Tiempo de respuesta del multímetro:} consultando la ficha técnica del multímetro RS PRO RS14 \cite{rs14datasheet}, la tasa de actualización es de 2 veces por segundo, lo que implica un tiempo de respuesta de:
+    \[
+        s_{\text{multi}}(t) = \pm 0.5\,\text{s}
+    \]
+    
+\end{enumerate}
+
+Asumiendo independencia entre las fuentes anteriores, la incertidumbre total se calcula mediante la suma de los cuadrados:
+\[
+	s(t) = \sqrt{
+	s_{\text{crono}}^2 +
+	s_{\text{fps}}^2 +
+	s_{\text{multi}}^2
+	}
+\]
+
+\noindent Sustituyendo los valores numéricos:
+\[
+	s(t) = \sqrt{
+	(0.01)^2 +
+	(0.0083)^2 +
+	(0.5)^2
+	} \approx \pm 0.5001\,\text{s}
+\]
+
+Claramente la incertidumbre esta dominada por el tiempo de respuesta de nuestro multímetro, y podremos aproximarla por $0.50s$ por comodidad.
+
+Además, la incertidumbre en la medición de la intensidad se puede observar utilizando la misma ficha técnica del multímetro, dando un valor de $s(I) = \pm 0.1 \mu A$ para el rango de intensidades medidas.
+
+Utilizando estas incertidumbres, podemos ahora presentar las mediciones experimentales como obtenidas directamente en el laboratorio, despues de ser procesados los vídeos a mano. \newpage
+
+% TABLITAS
+
+\vspace*{-3cm}
+\begin{figure}[H]
+\centering
+\footnotesize
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.24 \pm 0.50$ & $5.50 \pm 0.10$ \\
+$3.44 \pm 0.50$ & $5.40 \pm 0.10$ \\
+$6.24 \pm 0.50$ & $5.30 \pm 0.10$ \\
+$7.45 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$11.83 \pm 0.50$ & $5.10 \pm 0.10$ \\
+$15.04 \pm 0.50$ & $5.00 \pm 0.10$ \\
+$17.04 \pm 0.50$ & $4.90 \pm 0.10$ \\
+$21.04 \pm 0.50$ & $4.80 \pm 0.10$ \\
+$23.03 \pm 0.50$ & $4.70 \pm 0.10$ \\
+$27.43 \pm 0.50$ & $4.60 \pm 0.10$ \\
+$30.35 \pm 0.50$ & $4.50 \pm 0.10$ \\
+$33.05 \pm 0.50$ & $4.40 \pm 0.10$ \\
+$37.44 \pm 0.50$ & $4.30 \pm 0.10$ \\
+$40.61 \pm 0.50$ & $4.20 \pm 0.10$ \\
+$43.01 \pm 0.50$ & $4.10 \pm 0.10$ \\
+$47.43 \pm 0.50$ & $4.00 \pm 0.10$ \\
+$51.03 \pm 0.50$ & $3.90 \pm 0.10$ \\
+$55.05 \pm 0.50$ & $3.80 \pm 0.10$ \\
+$58.21 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$62.63 \pm 0.50$ & $3.60 \pm 0.10$ \\
+$66.20 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$71.82 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$74.19 \pm 0.50$ & $3.30 \pm 0.10$ \\
+$79.81 \pm 0.50$ & $3.20 \pm 0.10$ \\
+$84.59 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$89.02 \pm 0.50$ & $3.00 \pm 0.10$ \\
+$93.42 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$100.25 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$104.98 \pm 0.50$ & $2.70 \pm 0.10$ \\
+$109.80 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$116.20 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$123.41 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$126.98 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$135.38 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$141.39 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$149.40 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$152.18 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$166.60 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$172.98 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$182.98 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$189.77 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$202.97 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$213.78 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$224.57 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$237.37 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$255.75 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$266.55 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$292.96 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$304.93 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$333.74 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$364.94 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$392.90 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$437.71 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$514.50 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$630.06 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 2,2 \text{M}\Omega$;$C = 64 \mu F$;$V = 12,2$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+% \hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\vspace*{-9cm}
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$3.87 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$4.66 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$6.66 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$8.66 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$10.25 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$14.26 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$16.26 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$19.87 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$22.67 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$26.68 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$30.25 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$35.46 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$39.06 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$49.85 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$51.46 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$66.64 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$79.45 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 6,9\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 12,2 $\,V}
+% \end{minipage}
+\vspace{2.0cm}
+% \begin{minipage}[t]{\linewidth}
+\centering
+\footnotesize
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$3.73 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$7.73 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$10.91 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$16.91 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$22.53 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$31.32 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$38.12 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$48.10 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$54.11 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$72.89 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$96.09 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 10\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 12,2 $\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\end{figure}
+
+\vspace*{-2.5cm}
+\begin{figure}[H]
+\centering
+\footnotesize
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.26 \pm 0.50$ & $5.40 \pm 0.10$ \\
+$3.02 \pm 0.50$ & $5.30 \pm 0.10$ \\
+$3.45 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$4.26 \pm 0.50$ & $5.10 \pm 0.10$ \\
+$4.67 \pm 0.50$ & $5.00 \pm 0.10$ \\
+$5.03 \pm 0.50$ & $4.90 \pm 0.10$ \\
+$5.46 \pm 0.50$ & $4.80 \pm 0.10$ \\
+$5.84 \pm 0.50$ & $4.70 \pm 0.10$ \\
+$6.24 \pm 0.50$ & $4.60 \pm 0.10$ \\
+$6.63 \pm 0.50$ & $4.50 \pm 0.10$ \\
+$7.43 \pm 0.50$ & $4.40 \pm 0.10$ \\
+$7.83 \pm 0.50$ & $4.30 \pm 0.10$ \\
+$8.64 \pm 0.50$ & $4.20 \pm 0.10$ \\
+$9.05 \pm 0.50$ & $4.10 \pm 0.10$ \\
+$9.44 \pm 0.50$ & $4.00 \pm 0.10$ \\
+$9.84 \pm 0.50$ & $3.90 \pm 0.10$ \\
+$10.24 \pm 0.50$ & $3.80 \pm 0.10$ \\
+$11.05 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$11.44 \pm 0.50$ & $3.60 \pm 0.10$ \\
+$12.24 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$13.05 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$13.45 \pm 0.50$ & $3.30 \pm 0.10$ \\
+$14.26 \pm 0.50$ & $3.20 \pm 0.10$ \\
+$14.66 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$15.45 \pm 0.50$ & $3.00 \pm 0.10$ \\
+$15.82 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$16.67 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$17.43 \pm 0.50$ & $2.70 \pm 0.10$ \\
+$18.64 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$19.45 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$20.23 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$21.04 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$22.65 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$23.45 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$24.26 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$25.02 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$26.26 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$27.43 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$29.03 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$30.23 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$31.44 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$33.03 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$35.01 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$36.22 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$38.63 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$40.22 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$42.64 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$45.84 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$49.82 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$52.64 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$57.45 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$61.42 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$69.42 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$79.80 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 2.2 \text{M}\,\Omega$;$C = 10\mu F$;$V = 1.22 \cdot 10^{1}$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.74 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$3.93 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$4.73 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$5.92 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$6.71 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$7.92 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$9.13 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$9.92 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$11.14 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$12.72 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$13.94 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$15.92 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$17.13 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$19.12 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$20.72 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$22.72 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$25.52 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$28.32 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$29.94 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$34.71 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$37.54 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$43.11 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$47.12 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$55.10 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$65.90 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 4,7\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 12.2$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\end{figure}
+
+\vspace*{-2.5cm}
+\begin{figure}[H]
+\centering
+\footnotesize
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$1.92 \pm 0.50$ & $5.40 \pm 0.10$ \\
+$4.33 \pm 0.50$ & $5.30 \pm 0.10$ \\
+$5.52 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$7.12 \pm 0.50$ & $5.10 \pm 0.10$ \\
+$8.72 \pm 0.50$ & $5.00 \pm 0.10$ \\
+$9.93 \pm 0.50$ & $4.90 \pm 0.10$ \\
+$11.94 \pm 0.50$ & $4.80 \pm 0.10$ \\
+$13.13 \pm 0.50$ & $4.70 \pm 0.10$ \\
+$14.74 \pm 0.50$ & $4.60 \pm 0.10$ \\
+$15.92 \pm 0.50$ & $4.50 \pm 0.10$ \\
+$17.92 \pm 0.50$ & $4.40 \pm 0.10$ \\
+$19.53 \pm 0.50$ & $4.30 \pm 0.10$ \\
+$21.52 \pm 0.50$ & $4.20 \pm 0.10$ \\
+$22.72 \pm 0.50$ & $4.10 \pm 0.10$ \\
+$25.12 \pm 0.50$ & $4.00 \pm 0.10$ \\
+$26.73 \pm 0.50$ & $3.90 \pm 0.10$ \\
+$29.15 \pm 0.50$ & $3.80 \pm 0.10$ \\
+$31.12 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$32.32 \pm 0.50$ & $3.60 \pm 0.10$ \\
+$34.72 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$37.12 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$38.70 \pm 0.50$ & $3.30 \pm 0.10$ \\
+$41.90 \pm 0.50$ & $3.20 \pm 0.10$ \\
+$43.51 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$46.33 \pm 0.50$ & $3.00 \pm 0.10$ \\
+$48.72 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$51.55 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$53.90 \pm 0.50$ & $2.70 \pm 0.10$ \\
+$57.11 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$59.51 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$62.31 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$65.12 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$69.11 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$72.30 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$75.92 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$80.30 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$82.72 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$87.91 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$93.48 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$96.30 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$103.10 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$109.51 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$114.70 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$121.09 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$127.52 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$135.08 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$143.09 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$154.27 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$165.88 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$177.88 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$192.68 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$204.67 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$239.05 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$296.64 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 2,2\text{M}\,\Omega$;$C = 32\mu F$;$V = 12,2$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.53 \pm 0.50$ & $11.50 \pm 0.10$ \\
+$2.93 \pm 0.50$ & $11.20 \pm 0.10$ \\
+$3.34 \pm 0.50$ & $10.80 \pm 0.10$ \\
+$3.73 \pm 0.50$ & $10.10 \pm 0.10$ \\
+$4.15 \pm 0.50$ & $9.20 \pm 0.10$ \\
+$4.53 \pm 0.50$ & $8.50 \pm 0.10$ \\
+$4.94 \pm 0.50$ & $7.80 \pm 0.10$ \\
+$5.31 \pm 0.50$ & $7.20 \pm 0.10$ \\
+$5.75 \pm 0.50$ & $6.60 \pm 0.10$ \\
+$6.15 \pm 0.50$ & $6.00 \pm 0.10$ \\
+$6.55 \pm 0.50$ & $5.50 \pm 0.10$ \\
+$6.91 \pm 0.50$ & $5.10 \pm 0.10$ \\
+$7.35 \pm 0.50$ & $4.70 \pm 0.10$ \\
+$7.75 \pm 0.50$ & $4.30 \pm 0.10$ \\
+$8.15 \pm 0.50$ & $4.00 \pm 0.10$ \\
+$8.53 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$8.95 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$9.35 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$9.76 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$10.13 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$10.52 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$10.93 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$11.36 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$11.73 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$12.14 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$12.53 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$12.93 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$13.33 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$13.74 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$14.14 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$14.54 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$15.34 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$15.74 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$16.10 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$16.94 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$17.71 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$18.91 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$19.71 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$20.93 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$22.93 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 1\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 12$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$24.03 \pm 0.50$ & $5.30 \pm 0.10$ \\
+$24.47 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$25.23 \pm 0.50$ & $5.00 \pm 0.10$ \\
+$25.53 \pm 0.50$ & $4.80 \pm 0.10$ \\
+$26.13 \pm 0.50$ & $4.60 \pm 0.10$ \\
+$26.57 \pm 0.50$ & $4.40 \pm 0.10$ \\
+$26.87 \pm 0.50$ & $4.30 \pm 0.10$ \\
+$27.23 \pm 0.50$ & $4.10 \pm 0.10$ \\
+$27.73 \pm 0.50$ & $3.90 \pm 0.10$ \\
+$28.07 \pm 0.50$ & $3.80 \pm 0.10$ \\
+$28.47 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$28.71 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$29.25 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$29.53 \pm 0.50$ & $3.30 \pm 0.10$ \\
+$30.17 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$30.47 \pm 0.50$ & $3.00 \pm 0.10$ \\
+$30.77 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$31.25 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$31.53 \pm 0.50$ & $2.70 \pm 0.10$ \\
+$32.05 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$32.47 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$32.77 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$33.25 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$33.53 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$34.31 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$34.87 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$35.29 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$35.77 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$36.47 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$37.29 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$37.73 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$38.47 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$39.23 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$40.03 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$40.97 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$42.17 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$43.13 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$44.47 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$45.29 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$46.53 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$48.47 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$51.23 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$53.29 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$56.73 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$61.29 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 2,2\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 12,2 $\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$3.06 \pm 0.50$ & $9.60 \pm 0.10$ \\
+$3.45 \pm 0.50$ & $9.30 \pm 0.10$ \\
+$3.89 \pm 0.50$ & $8.90 \pm 0.10$ \\
+$4.25 \pm 0.50$ & $8.40 \pm 0.10$ \\
+$4.69 \pm 0.50$ & $7.60 \pm 0.10$ \\
+$5.05 \pm 0.50$ & $7.00 \pm 0.10$ \\
+$5.49 \pm 0.50$ & $6.40 \pm 0.10$ \\
+$5.83 \pm 0.50$ & $5.90 \pm 0.10$ \\
+$6.26 \pm 0.50$ & $5.40 \pm 0.10$ \\
+$6.67 \pm 0.50$ & $4.90 \pm 0.10$ \\
+$7.06 \pm 0.50$ & $4.50 \pm 0.10$ \\
+$7.47 \pm 0.50$ & $4.20 \pm 0.10$ \\
+$7.87 \pm 0.50$ & $3.90 \pm 0.10$ \\
+$8.23 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$8.64 \pm 0.50$ & $3.30 \pm 0.10$ \\
+$9.07 \pm 0.50$ & $3.00 \pm 0.10$ \\
+$9.45 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$9.85 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$10.27 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$10.64 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$11.07 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$11.47 \pm 0.50$ & $1.80 \pm 0.10$ \\
+$11.84 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$12.28 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$12.65 \pm 0.50$ & $1.40 \pm 0.10$ \\
+$13.05 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$13.45 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$13.88 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$14.24 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$14.65 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$15.49 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$15.87 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$16.66 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$17.03 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$18.27 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$19.47 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$21.07 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$23.08 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 1\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 10$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.54 \pm 0.50$ & $10.70 \pm 0.10$ \\
+$2.96 \pm 0.50$ & $10.50 \pm 0.10$ \\
+$3.55 \pm 0.50$ & $10.00 \pm 0.10$ \\
+$3.75 \pm 0.50$ & $9.40 \pm 0.10$ \\
+$4.16 \pm 0.50$ & $8.60 \pm 0.10$ \\
+$4.55 \pm 0.50$ & $7.90 \pm 0.10$ \\
+$4.95 \pm 0.50$ & $7.20 \pm 0.10$ \\
+$5.35 \pm 0.50$ & $6.60 \pm 0.10$ \\
+$5.74 \pm 0.50$ & $6.10 \pm 0.10$ \\
+$6.15 \pm 0.50$ & $5.60 \pm 0.10$ \\
+$6.55 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$6.95 \pm 0.50$ & $4.50 \pm 0.10$ \\
+$7.36 \pm 0.50$ & $4.10 \pm 0.10$ \\
+$7.75 \pm 0.50$ & $3.80 \pm 0.10$ \\
+$8.16 \pm 0.50$ & $3.50 \pm 0.10$ \\
+$8.55 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$8.96 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$9.36 \pm 0.50$ & $2.80 \pm 0.10$ \\
+$9.75 \pm 0.50$ & $2.50 \pm 0.10$ \\
+$10.16 \pm 0.50$ & $2.30 \pm 0.10$ \\
+$10.56 \pm 0.50$ & $2.10 \pm 0.10$ \\
+$10.97 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$11.37 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$11.74 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$12.16 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$12.52 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$12.97 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$13.36 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$13.77 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$14.16 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$14.93 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$15.38 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$15.75 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$16.58 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$17.35 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$18.54 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$19.35 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$20.95 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$22.96 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 1\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 11$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\footnotesize
+% \adjustbox{max height=0.9\textheight,max width=\linewidth}{
+\begin{minipage}[t]{\linewidth}
+\centering
+\setlength{\arrayrulewidth}{1.2pt}
+\begin{tabular}{|c|c|}
+\hline
+$t \pm s(t) (s)$ & $I \pm s(I) (\mu A)$ \\
+\hline
+$2.45 \pm 0.50$ & $8.30 \pm 0.10$ \\
+$2.83 \pm 0.50$ & $8.20 \pm 0.10$ \\
+$3.20 \pm 0.50$ & $7.80 \pm 0.10$ \\
+$3.62 \pm 0.50$ & $7.30 \pm 0.10$ \\
+$4.02 \pm 0.50$ & $6.70 \pm 0.10$ \\
+$4.42 \pm 0.50$ & $6.20 \pm 0.10$ \\
+$4.82 \pm 0.50$ & $5.60 \pm 0.10$ \\
+$5.22 \pm 0.50$ & $5.20 \pm 0.10$ \\
+$5.62 \pm 0.50$ & $4.80 \pm 0.10$ \\
+$6.00 \pm 0.50$ & $4.40 \pm 0.10$ \\
+$6.43 \pm 0.50$ & $4.00 \pm 0.10$ \\
+$6.82 \pm 0.50$ & $3.70 \pm 0.10$ \\
+$7.22 \pm 0.50$ & $3.40 \pm 0.10$ \\
+$7.63 \pm 0.50$ & $3.10 \pm 0.10$ \\
+$8.03 \pm 0.50$ & $2.90 \pm 0.10$ \\
+$8.43 \pm 0.50$ & $2.60 \pm 0.10$ \\
+$8.84 \pm 0.50$ & $2.40 \pm 0.10$ \\
+$9.23 \pm 0.50$ & $2.20 \pm 0.10$ \\
+$9.64 \pm 0.50$ & $2.00 \pm 0.10$ \\
+$10.04 \pm 0.50$ & $1.90 \pm 0.10$ \\
+$10.44 \pm 0.50$ & $1.70 \pm 0.10$ \\
+$10.84 \pm 0.50$ & $1.60 \pm 0.10$ \\
+$11.23 \pm 0.50$ & $1.50 \pm 0.10$ \\
+$11.65 \pm 0.50$ & $1.30 \pm 0.10$ \\
+$12.02 \pm 0.50$ & $1.20 \pm 0.10$ \\
+$12.44 \pm 0.50$ & $1.10 \pm 0.10$ \\
+$13.24 \pm 0.50$ & $1.00 \pm 0.10$ \\
+$13.62 \pm 0.50$ & $0.90 \pm 0.10$ \\
+$14.05 \pm 0.50$ & $0.80 \pm 0.10$ \\
+$14.43 \pm 0.50$ & $0.70 \pm 0.10$ \\
+$15.21 \pm 0.50$ & $0.60 \pm 0.10$ \\
+$15.62 \pm 0.50$ & $0.50 \pm 0.10$ \\
+$16.83 \pm 0.50$ & $0.40 \pm 0.10$ \\
+$18.02 \pm 0.50$ & $0.30 \pm 0.10$ \\
+$19.23 \pm 0.50$ & $0.20 \pm 0.10$ \\
+$22.00 \pm 0.50$ & $0.10 \pm 0.10$ \\
+\hline
+\end{tabular}
+\caption*{$R = 1\text{M}\,\Omega$;$C = 4,7\mu F$;$V = 9$\,V}
+\end{minipage}
+
+}
+\end{minipage}
+\end{figure}
+
+% END TABLITAS
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{media/img1.png}
+    \caption*{Figura 1: Skibidi toilet}
+    \label{fig:1}
+\end{figure}
+
+Ademas de esto tambien podemos ver otra cosa que es la siguiente
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{media/img2.png}
+    \caption*{Figura 2: Platón de Albóndigas}
+    \label{fig:2}
+\end{figure}
+
+
+\section{Conclusión}
+
+El uso del multímetro RS14 introduce una incertidumbre significativa en el eje temporal debido a su tasa de actualización y retardo de respuesta. Se recomienda usar interpolación y ajuste exponencial para obtener una mejor representación de la curva de descarga.
+
+
+
+% Bibliografia
+
+\printbibliography
+
+\end{document}
+
